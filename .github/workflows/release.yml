@@ -1,0 +1,57 @@
+name: '🚀 release'
+
+on:
+  push:
+    branches: ['main']
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  release:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: '☁️ checkout repository'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: '🛠️ setup pnpm'
+        uses: pnpm/action-setup@v2
+
+      - name: '🔧 setup node'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: '🔼 update rust'
+        run: rustup update && rustup default stable
+
+      - name: '💿 restore/save cargo cache'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            ./target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: '📦 install cargo-screeps'
+        run: cargo install cargo-screeps
+
+      - name: '📦 build crates'
+        run: cargo screeps build
+
+      - name: '🚀 release'
+        uses: changesets/action@v1
+        with:
+          title: 'chore: version package'
+          commit: 'chore: version package'
+          version: node .github/changeset-version.cjs

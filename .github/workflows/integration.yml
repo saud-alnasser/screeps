@@ -1,0 +1,41 @@
+name: '🔧 integration'
+
+on:
+  pull_request:
+    types: ['opened', 'reopened', 'synchronize', 'edited']
+
+jobs:
+  integration:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: '☁️ checkout repository'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: '📝 lint pull request title'
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: '🔼 update rust'
+        run: rustup update && rustup default stable
+
+      - name: '💿 restore/save cargo cache'
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            ./target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: '📦 install cargo-screeps'
+        run: cargo install cargo-screeps
+
+      - name: '📦 build crates'
+        run: cargo screeps build

@@ -9,15 +9,15 @@ edition = "2021"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-js-sys = "0.3"
-log = "0.4"
-fern = "0.6"
+js-sys = "=0.3.69"
+log = "=0.4.21"
+fern = "=0.6.2"
 # If you'd like to use a locally-cloned out version of the game API crate
 # (for testing PRs, etc), you can use a local path (replacing the below line):
 # e.g. screeps-game-api = { path = "../screeps-game-api" }
-screeps-game-api = "0.20"
-wasm-bindgen = "0.2"
-web-sys = { version = "0.3", features = ["console"] }
+screeps-game-api = "=0.20.1"
+wasm-bindgen = "=0.2.92"
+web-sys = { version = "=0.3.69", features = ["console"] }
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3"

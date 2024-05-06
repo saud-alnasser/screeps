@@ -1,0 +1,12 @@
+# for full syntax and available options, see
+# https://github.com/rustyscreeps/cargo-screeps/blob/master/screeps-defaults.toml
+
+default_deploy_mode = "dev" 
+
+[build]
+build_mode = "world"
+# options to allow building code against rust versions >=1.70 without opcodes
+# incompatible with screeps server environments; requires nightly rust. See 
+# https://github.com/rustyscreeps/screeps-game-api/issues/391
+# extra_options = ["--config", "build.rustflags=['-Ctarget-cpu=mvp']", "-Z", "build-std=std,panic_abort"]
+extra_options = ["--config", "build.rustflags=['-Ctarget-cpu=mvp']"]

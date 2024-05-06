@@ -34,8 +34,14 @@ jobs:
             ./target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: '📦 install cargo-screeps'
-        run: cargo install cargo-screeps
+      - name: '⚙️ prepare cargo-screeps'
+        run: |
+          cp .github/screeps.build.toml screeps.toml
+          if ! cargo screeps --version; then
+            cargo install cargo-screeps
+          else
+            echo "cargo-screeps already installed"
+          fi
 
       - name: '📦 build crates'
         run: cargo screeps build
